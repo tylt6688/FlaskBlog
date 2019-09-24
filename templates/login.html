@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>欢迎登陆</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
+
+
+    <style type="text/css">
+        .login-index {
+            margin: 120px 100px 0px 100px;
+        }
+
+        .row {
+            margin-top: 32px;
+        }
+
+        .message-check {
+            color: #c9302c;
+            margin-left: 700px;
+        }
+    </style>
+
+
+</head>
+
+<body>
+<div class="container-fluid">
+    <div class="login-index">
+        <form class="form-inline" action="/login" method="post">
+            <div class="panel panel-primary">
+                <div class="panel-heading">登录本站</div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-offset-5">
+                            <label>账号: </label> <input type="text" class="form-control"
+                                                       name="username" placeholder="请输入账号">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-offset-5">
+                            <label>密码: </label> <input type="password" class="form-control"
+                                                       name="password" placeholder="请输入密码">
+                        </div>
+                    </div>
+                    <div class="row">
+                        {% if message %}
+                            <p class="message-check"> {{ message }}</p>
+                        {% endif %}
+                        <div class="col-md-offset-5">
+                            <div class="checkbox">
+                                <label> <input type="checkbox"><a>已阅读并同意协议内容</a>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-5 col-md-offset-5">
+                                <button type="submit" class="btn btn-success btn-lg">登录</button>
+                                <button type="button" onclick="regist()" class="btn btn-success btn-lg">注册</button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<script src="../static/js/jquery.min.js"></script>
+<script src="../static/js/bootstrap.js"></script>
+<script>
+    function regist() {
+        window.location.href = "/register"
+    }
+
+
+
+    {#$('form').submit(function (e) {#}
+    {#    e.preventDefault();  //阻止默认提交#}
+    {#    username = $("[name='username']").val(); // 注意，jquery筛选一定加引号，否则报错uncaught#}
+    {#    password = $("[name='password']").val();#}
+    {#    $.ajax({#}
+    {#        url: "/login",#}
+    {#        type: "POST",#}
+    {#        data: {#}
+    {#            "username": username,#}
+    {#            "password": password,#}
+    {#        },#}
+    {#        dataType:"JSON",#}
+    {#        success: function (res) {  //res是server端响应#}
+    {#            response = JSON.parse(res); //将json字符串解析为json对象（即JS对象）#}
+    {#            if (response['errors']) {#}
+    {#                console.log(response['errors']);#}
+    {#            } else {#}
+    {#                location.href = "/";  //跳转至首页#}
+    {#            }#}
+    {#        }#}
+    {#    })#}
+    {# })#}
+
+</script>
+
+</html>

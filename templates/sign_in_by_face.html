@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>人脸登录</title>
+    <link rel="stylesheet" href="/static/base/bootstrap.css">
+    <script src="../static/js/jquery.min.js"></script>
+    <script src="../static/js/bootstrap.js"></script>
+    <script src="https://cdn.staticfile.org/popper.js/1.12.9/umd/popper.min.js"></script>
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <style>
+        #video {
+            width: 480px;
+            height: 320px;
+            clear: both;
+            display: block;
+            margin: auto;
+        }
+
+        #alert {
+            border: 1px solid #ccc;
+            border-radius: 0;
+            background: #fff;
+            font-size: 16px;
+            min-width: 300px;
+            min-height: 60px;
+            position: absolute;
+            z-index: 9999;
+            top: 50%;
+            left: 50%;
+            margin: -125px 0 0 -150px;
+            text-align: center;
+            display: none;
+            line-height: 60px;
+        }
+    </style>
+</head>
+<body>
+
+<input type ="hidden" name ="csrfmiddlewaretoken" value ="{{csrf_token}}">
+<div class="container">
+
+    <div class="row mt-4">
+        <div class="mt-2 col-6 m-auto border">
+            <div class="col-12 text-center">
+                <div class="col-6 ml-auto mr-auto mt-4">
+                    <input type="text" id="username" class="form-control" placeholder="请输入用户名"
+                           onchange="check_username(this.value)">
+                </div>
+
+            </div>
+            <!--video用于显示媒体设备的视频流，自动播放-->
+            <div class="col-12 mt-4 mb-4">
+                <video id="video" autoplay></video>
+                <canvas id="canvas" style="display: none" class="ml-auto mr-auto"></canvas>
+            </div>
+        </div>
+    </div>
+    <div id="alert"></div>
+</div>
+
+<script>
+    var video = document.getElementById("video");
+    var canvas = document.getElementById("canvas");
+    var alert = $("#alert");
+    var context = canvas.getContext('2d');
+    var sign_in = $("#sign-in");
+    var retry = $("#retry");
+    var mediaStreamTrack;
+    var rqs_username;
+
+    function getUserMediaToPhoto(constraints, success, error) {
+        if (navigator.mediaDevices.getUserMedia) {
+            //最新标准API
+            navigator.mediaDevices.getUserMedia(constraints).then(success).catch(error);
+        } else if (navigator.webkitGetUserMedia) {
+            //webkit核心浏览器
+            navigator.webkitGetUserMedia(constraints, success, error);
+        } else if (navigator.mozGetUserMedia) {
+            //firefox浏览器
+            navigator.mozGetUserMedia(constraints, success, error);
+        } else if (navigator.getUserMedia) {
+            //旧版API
+            navigator.getUserMedia(constraints, success, error);
+        }
+    }
+
+    //成功回调函数
+    function success(stream) {
+        //将视频流转化为video的源
+        video.srcObject = stream;
+        mediaStreamTrack = stream;
+        video.play();//播放视频
+    }
+
+    // 失败回调函数
+    function error(error) {
+        console.log('访问用户媒体失败：', error.name, error.message);
+    }
+
+    // 调用摄像头
+    function use_video() {
+        if (navigator.mediaDevices.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.getUserMedia) {
+            getUserMediaToPhoto({video: {width: 480, height: 320}}, success, error);
+        } else {
+            alert('你的浏览器不支持访问用户媒体设备');
+        }
+    }
+
+    var ok;
+    //setInterval(get_face_info,3000);
+
+    // 核对用户名
+    function check_username(username) {
+        $.ajax({
+            url: '/resver/',
+            data: {username: username},
+            type: 'get',
+            contentType: false,
+            success: function (response) {
+                if (response['user_exits']) {
+                    rqs_username = username;
+                    console.log(response);
+                    alert.html("<i class='fa fa-check-circle text-success'></i> 用户名验证成功,正在启动摄像头");
+                    alert.show(300);
+                    alert.delay(1000).fadeOut("fast");
+                    use_video();
+                    setTimeout(get_face_info, 1000);
+                    sign_in.show(300);
+                    retry.hide();
+                } else if (!response['user_exits']) {
+                    alert.html("<i class='fa fa-close text-danger'></i> 用户名验证失败，请重新输入");
+                    alert.show(300);
+                    alert.delay(1000).fadeOut("fast");
+                }
+            }
+        })
+    }
+
+    // 获取人脸数据
+    function get_face_info() {
+        let current_url = window.location.pathname; // 记录当前页
+        let count = 0;
+        canvas.width = 480;
+        canvas.height = 320;
+        var timer = setInterval(function () {
+            if (count < 3) {
+                count++;
+            } else {
+                clearInterval(timer);
+                alert.html("<i class='fa fa-close text-danger mt-1'></i> 登陆失败！请换一种方式登录。" +
+                    "<br><button class='btn btn-danger mt-2' onclick=window.location.href='/'>确定</button>");
+                alert.show(300);
+                mediaStreamTrack.getTracks()[0].stop();
+                return false;
+            }
+            context.drawImage(video, 0, 0, 480, 320);
+            var face = canvas.toDataURL();
+            console.log(face);
+            let form = new FormData();
+            form.append("face-info", face);
+            form.append("username", rqs_username);
+            $.ajax({
+                url: '/sign_in_by_face/',
+                data: form,
+                type: 'post',
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    console.log(response);
+                    switch (response) {
+                        case "success":
+                            alert.html("<i class='fa fa-check-circle text-success mt-1'></i> 验证通过，登录成功！");
+                            alert.show(300);
+                            alert.delay(1500).fadeOut("fast");
+                            clearInterval(timer);
+                            setTimeout(function () {
+                                window.location.href = '/';
+                            }, 1500);
+                            break;
+                        case "no_face_info":
+                            alert.html("<i class='fa fa-close text-danger mt-1'></i> 没有您的人脸信息，请先录入人脸信息！");
+                            alert.show(300);
+                            alert.delay(1000).fadeOut("fast");
+                            clearInterval(timer);
+                            video.pause();
+                    }
+                }
+            })
+        }, 3000)
+    }
+</script>
+</body>
+</html>

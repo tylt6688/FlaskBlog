@@ -1,0 +1,61 @@
+#alert {
+    border: 1px solid #ccc;
+    border-radius: 0;
+    background: #fff;
+    font-size: 16px;
+    min-width: 300px;
+    height: 60px;
+    position: absolute;
+    z-index: 9999;
+    top: 50%;
+    left: 50%;
+    margin: -125px 0 0 -150px;
+    text-align: center;
+    display: none;
+    line-height: 60px;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    width: 90px;
+    text-align: center;
+    box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.3);
+    z-index: 100;
+}
+
+.dropdown:hover .dropdown-content {
+    background-color: #474849;
+    display: block;
+}
+
+#menu a {
+    text-decoration: none;
+    color: #f0f0f0;
+}
+
+#menu li a:hover {
+    color: red !important;
+}
+
+.navbar a {
+    font: 16px "Microsoft YaHei";
+    font-weight: normal;
+}
+
+.nav-btn {
+    background-color: transparent;
+    border: none;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+}
+
+.nav-btn:hover {
+    color: red;
+}

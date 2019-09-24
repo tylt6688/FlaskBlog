@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注册人脸</title>
+    <link rel="stylesheet" href="/static/base/bootstrap.css">
+    <script src="../static/js/jquery.min.js"></script>
+    <script src="../static/js/bootstrap.js"></script>
+    <script src="https://cdn.staticfile.org/popper.js/1.12.9/umd/popper.min.js"></script>
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        #video {
+            width: 480px;
+            height: 320px;
+            clear: both;
+            display: block;
+            margin: auto
+        }
+
+        #error-alert {
+            border: 1px solid #ccc;
+            border-radius: 0;
+            background: #fff;
+            font-size: 16px;
+            min-width: 300px;
+            height: 60px;
+            position: absolute;
+            z-index: 9999;
+            top: 30%;
+            left: 50%;
+            margin-left: -150px;
+            text-align: center;
+            display: none;
+            line-height: 60px;
+        }
+
+    </style>
+</head>
+<body>
+<input type ="hidden" name ="csrfmiddlewaretoken" value ="{{csrf_token}}">
+<div class="container">
+    <div class="row mt-4">
+        <!--video用于显示媒体设备的视频流，自动播放-->
+        <div class="col-8 m-auto">
+            <div class="m-auto">
+                <video id="video" autoplay class="ml-auto mr-auto"></video>
+                <canvas id="canvas" style="display: none" class="ml-auto mr-auto"></canvas>
+            </div>
+        </div>
+        <div class="col-8 ml-auto mr-auto mt-3 text-center">
+            <span class="text-danger mt-1" id="hint" style="font-size: 14px;font-weight: bold">请确保摄像头里只有一张人脸</span>
+        </div>
+    </div>
+    <div id="error-alert"></div>
+</div>
+<script>
+
+    var video = document.getElementById("video");
+    var canvas = document.getElementById("canvas");
+    var error_alert = $("#error-alert");
+    var context = canvas.getContext('2d');
+    var mediaStreamTrack;
+
+    use_video();
+
+    function getUserMediaToPhoto(constraints, success, error) {
+        if (navigator.mediaDevices.getUserMedia) {
+            //最新标准API
+            navigator.mediaDevices.getUserMedia(constraints).then(success).catch(error);
+        } else if (navigator.webkitGetUserMedia) {
+            //webkit核心浏览器
+            navigator.webkitGetUserMedia(constraints, success, error);
+        } else if (navigator.mozGetUserMedia) {
+            //firefox浏览器
+            navigator.mozGetUserMedia(constraints, success, error);
+        } else if (navigator.getUserMedia) {
+            //旧版API
+            navigator.getUserMedia(constraints, success, error);
+        }
+    }
+
+    //成功回调函数
+    function success(stream) {
+        //将视频流转化为video的源
+        video.srcObject = stream;
+        mediaStreamTrack = stream;
+        video.play();//播放视频
+    }
+
+    // 失败回调函数
+    function error(error) {
+        console.log('访问用户媒体失败：', error.name, error.message);
+    }
+
+    // 调用摄像头
+    function use_video() {
+        if (navigator.mediaDevices.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.getUserMedia) {
+            getUserMediaToPhoto({video: {width: 480, height: 320}}, success, error);
+        } else {
+            alert('你的浏览器不支持访问用户媒体设备');
+        }
+    }
+
+    setTimeout(function () {
+        // 将video画面描绘在canvas画布上
+        send_face();
+    }, 1000);
+
+    // 将人脸数据传到后台
+    function send_face() {
+        var url = window.location.pathname;
+        var form = new FormData();
+        canvas.width = 480;
+        canvas.height = 320;
+        var timer = setInterval(function () {
+            context.drawImage(video, 0, 0, 480, 320);
+            var face = canvas.toDataURL();
+            form.append('face-info', face);
+            $.ajax({
+                url: url,
+                data: form,
+                type: 'post',
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    console.log(response);
+                    switch (response) {
+                        case "failed":
+                            entry_failed();
+                            break;
+                        case "no_face":
+                            no_face();
+                            break;
+                        case "not_only_one_face":
+                            not_only_one_face();
+                            break;
+                        case "not_clear":
+                            not_clear();
+                            break;
+                        case  "success":
+                            entry_success();
+                            break;
+                        default:
+                            break;
+                    }
+                },
+                error: function () {
+                    alert("录入人脸信息时发生未知错误");
+                    clearInterval(timer);
+                }
+            });
+        },3000)
+    }
+
+    // 录入人脸失败
+    function entry_failed() {
+        capture.hide("300");
+        retry.show("300");
+        error_alert.html("<i class='fa fa-close text-warning mt-1'></i> 录入人脸失败，请稍后再试");
+        error_alert.show(300);
+        error_alert.delay(2000).fadeOut();
+    }
+
+    // 没有人脸信息
+    function no_face() {
+        capture.hide("300");
+        retry.show("300");
+        error_alert.html("<i class='fa fa-close text-danger mt-1'></i> 没有检测到人脸信息，请调整角度");
+        error_alert.show(300);
+        error_alert.delay(2000).fadeOut();
+    }
+
+    // 人脸不清晰
+    function not_clear() {
+        capture.hide("300");
+        retry.show("300");
+        error_alert.html("<i class='fa fa-close text-danger mt-1'></i> 人脸不清晰，请重试");
+        error_alert.show(300);
+        error_alert.delay(2000).fadeOut();
+    }
+
+    // 存在多张人脸
+    function not_only_one_face() {
+        capture.hide("300");
+        retry.show("300");
+        error_alert.html("<i class='fa fa-close text-danger mt-1'></i> 请确保画面中只有一张人脸");
+        error_alert.show(300);
+        error_alert.delay(2000).fadeOut();
+    }
+
+    // 录入人脸成功
+    function entry_success() {
+        console.log("entry_success");
+        error_alert.html("<i class='fa fa-check-circle text-success mt-1'></i> 录入人脸成功，即将跳转到首页");
+        error_alert.show(300);
+        error_alert.delay(2000).fadeOut();
+        setTimeout(function () {
+            window.location.href = "/";
+        }, 1500);
+    }
+
+</script>
+</body>
+</html>
