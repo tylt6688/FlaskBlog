@@ -54,8 +54,8 @@
                                     <button id="register" onclick="register()" class="btn btn-success btn-lg">
                                         提交信息
                                     </button>
-                                    <button type="button" onclick="loginface()" class="btn btn-success btn-lg">人脸登录</button>
-                                <button type="button" onclick="enterface()" class="btn btn-success btn-lg">人脸注册</button>
+                                    <button type="button" onclick="enterface()" class="btn btn-success btn-lg">人脸注册
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -67,12 +67,8 @@
 </div>
 </body>
 <script>
-    function loginface() {
-        window.location.href = "/sign_in_by_face"
-
-    }
     function enterface() {
-                window.location.href = "/entry_face"
+        window.location.href = "/entry_face"
     }
 </script>
 <script src="../static/js/jquery.min.js"></script>

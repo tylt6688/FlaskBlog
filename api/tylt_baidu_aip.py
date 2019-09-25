@@ -1,10 +1,6 @@
 from aip import AipFace
 from aip import AipBodyAnalysis
 class tylt_AipFace:
-    """
-    author:jhy
-    use baidu-aip sdk
-    """
 
     face_constrast_img1 = None
     face_constrast_img2 = None

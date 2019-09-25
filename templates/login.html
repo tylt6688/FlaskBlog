@@ -31,7 +31,7 @@
 <body>
 <div class="container-fluid">
     <div class="login-index">
-        <form class="form-inline" action="/login" method="post">
+        <form class="form-inline" action="/login/" method="post">
             <div class="panel panel-primary">
                 <div class="panel-heading">登录本站</div>
                 <div class="panel-body">
@@ -69,6 +69,7 @@
                 </div>
             </div>
         </form>
+    <button type="button" onclick="facelogin()" class="btn btn-default">尝试人脸登录</button>
     </div>
 </div>
 </body>
@@ -78,31 +79,10 @@
     function regist() {
         window.location.href = "/register"
     }
+    function facelogin() {
+        window.location.href = "/sign_in_by_face"
 
-
-
-    {#$('form').submit(function (e) {#}
-    {#    e.preventDefault();  //阻止默认提交#}
-    {#    username = $("[name='username']").val(); // 注意，jquery筛选一定加引号，否则报错uncaught#}
-    {#    password = $("[name='password']").val();#}
-    {#    $.ajax({#}
-    {#        url: "/login",#}
-    {#        type: "POST",#}
-    {#        data: {#}
-    {#            "username": username,#}
-    {#            "password": password,#}
-    {#        },#}
-    {#        dataType:"JSON",#}
-    {#        success: function (res) {  //res是server端响应#}
-    {#            response = JSON.parse(res); //将json字符串解析为json对象（即JS对象）#}
-    {#            if (response['errors']) {#}
-    {#                console.log(response['errors']);#}
-    {#            } else {#}
-    {#                location.href = "/";  //跳转至首页#}
-    {#            }#}
-    {#        }#}
-    {#    })#}
-    {# })#}
+    }
 
 </script>
 
