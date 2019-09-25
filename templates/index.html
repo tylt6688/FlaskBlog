@@ -30,21 +30,33 @@
                 </div>
                 <button type="submit" class="btn btn-default">搜索</button>
             </form>
+            <div style="display: {{ hide }}">
+                <div class="nav nav-pills navbar-right">
+                    <a href="/login">
+                        <button type="button" class="btn btn-default navbar-btn">登录</button>
+                    </a>
+                    <a href="/register">
+                        <button type="button" class="btn btn-default navbar-btn">注册</button>
+                    </a>
+                </div>
+            </div>
+            <div style="display: {{ show }}">
+                <div class="nav nav-pills navbar-right">
+                    <p class="navbar-text">欢迎您{{ user }}!</p>
 
-            <div class="nav nav-pills navbar-right">
-                <a href="/login">
-                    <button type="button" class="btn btn-default navbar-btn">登录</button>
-                </a>
-                <a href="/register">
-                    <button type="button" class="btn btn-default navbar-btn">注册</button>
-                </a>
+                    <button type="button" class="btn btn-default navbar-btn">浏览记录</button>
+
+                    <button type="button" class="btn btn-default navbar-btn">我的喜爱</button>
+
+                    <button type="button" class="btn btn-default navbar-btn">个人中心</button>
+                </div>
             </div>
         </div>
     </nav>
 
 
     <div class="jumbotron" id="view-paner">
-        <h1>欢迎您来到本站!</h1>
+        <h1>欢迎{{ user }}来到本站!</h1>
         <h3>欢迎来到主页</h3>
         <a class="btn btn-primary btn-lg" href="https://blog.csdn.net/tylt6688" target="_blank"
            role="button">看到更多</a>
@@ -53,8 +65,6 @@
         <div class="col-md-2 col-lg-offset-1">
             <ul class="nav nav-pills nav-stacked">
                 <li role="presentation" class="active"><a href="#">主页</a></li>
-                <li role="presentation"><a href="#">分类</a></li>
-                <li role="presentation"><a href="#">分类</a></li>
                 <li role="presentation"><a href="#">分类</a></li>
                 <li role="presentation"><a href="#">分类</a></li>
                 <li role="presentation"><a href="#">分类</a></li>

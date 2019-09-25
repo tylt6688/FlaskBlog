@@ -1,24 +1,38 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify, sessions
+from flask import Flask, render_template, request, redirect, url_for, jsonify, sessions, make_response
 from Utils.SQLtool import SQLUtil
 from api.tylt_baidu_aip import tylt_AipFace
 
 app = Flask(__name__)
-app.config["SECRET_KEY"]='7f23059270db4a5686a9fd87662cb510'
+app.config["SECRET_KEY"] = '7f23059270db4a5686a9fd87662cb510'
 
-@app.route('/', methods=['GET'])
-def home():
+"""
+定义全局数据
+"""
+
+
+@app.context_processor
+def result():
     mysql = SQLUtil()
     sql = "SELECT title,content FROM article"
     result = mysql.getMany(sql, 15)
-    leg = len(result)
-    print(result)
+    data = dict(
+        result=result,
+    )
+    return data
 
-    return render_template('index.html', result=result)
 
-
-@app.route('/index', methods=['GET'])
-def index():
-    return render_template('index.html')
+@app.route('/', methods=['GET'])
+def home():
+    if request.cookies.get('userID') is not None:
+        hide = 'none'
+        show = 'block'
+        username = request.cookies.get('userID')
+        print(username)
+        return render_template('index.html', user=username, hide=hide, show=show)
+    else:
+        hide = 'block'
+        show = 'none'
+        return render_template('index.html', hide=hide, show=show)
 
 
 @app.route('/login/', methods=['GET', 'POST'])
@@ -26,23 +40,23 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        print(username,password)
         mysql = SQLUtil()
 
         sql = "SELECT * FROM user WHERE name='%s'" % username
         res = mysql.getAll(sql)
-        print(res)
         mysql.dispose()
-        print(res[0]['name'],"########",res[0]['password'])
         if res == False:
             message = "您还没在本站进行注册！"
             return render_template('login.html', message=message)
         else:
-            # from werkzeug.security import generate_password_hash
-            # if res[0]['name'] == username and res[0]['password'] == generate_password_hash(password):
-            if res[0]['name'] == username and res[0]['password'] == password:
+            from werkzeug.security import generate_password_hash, check_password_hash
+            if res[0]['name'] == username and check_password_hash(res[0]['password'], password):
+                user = res[0]['name']
+                while user is not None:
+                    resp = make_response(redirect(url_for('home')))
+                    resp.set_cookie('userID', user)
+                    return resp
 
-                return render_template('index.html')
             else:
                 message = "您输入的密码错误！"
                 return render_template('login.html', message=message)
@@ -70,7 +84,6 @@ def register():
 @app.route('/entry_face/', methods=['GET', 'POST'])
 def entry_face():
     mysql = SQLUtil()
-    Id = 1
     if request.method == 'POST':
         data = request.form.get('face-info')
         face_info = data.split('base64,')[1]
@@ -87,7 +100,7 @@ def entry_face():
             return 'not_clear'
         else:
             try:
-                sql = "UPDATE user SET face_info = '%s' where Id= %d " % (face_info, Id)
+                sql = "UPDATE user SET face_info = '%s' where name= '%s' " % (face_info, 'tylt')
                 mysql.update(sql)
                 mysql.dispose()
                 return 'success'
@@ -118,6 +131,7 @@ def sign_by_face():
                 contrast_result = aip.face_contrast()
                 if contrast_result['error_code'] == 0 and contrast_result['result']['score'] >= 80:
                     return 'success'
+
         except Exception as e:
             print(e)
             return '<h1>服务器发生未知错误，请稍后重试</h1>'
@@ -135,10 +149,14 @@ def username_check():
 
         if user_result['COUNT(name)'] == 0:
             print(jsonify({"user_exits": False}))
+
             return jsonify({"user_exits": False})
         else:
+            resp = make_response(redirect(url_for('home')))
+            resp.set_cookie('userID', username)
             print(jsonify({"user_exits": True}))
             return jsonify({"user_exits": True})
+
     else:
         return render_template("register_by_face.html")
 

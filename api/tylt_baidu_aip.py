@@ -123,7 +123,7 @@ class tylt_AipFace:
         return reponse_face_list
 
 
-class Jhy_AipBodyAnalysis:
+class tylt_AipBodyAnalysis:
     def __init__(self):
         self.APP_ID = '14372361'
         self.API_KEY = 'rwIh36pOcyqV8S9rQ6BBQlxh'
