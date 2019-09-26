@@ -60,17 +60,17 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function () {
     editor.settings.relative_urls = true;
     editor.documentBaseURI = new URI('http://www.site.com/dirA/dirB/dirC/');
 
-    editor.setContent('<a href="test.html">test</a>');
-    LegacyUnit.equal(editor.getContent(), '<p><a href="test.html">test</a></p>');
+    editor.setContent('<a href="article.html">test</a>');
+    LegacyUnit.equal(editor.getContent(), '<p><a href="article.html">test</a></p>');
 
-    editor.setContent('<a href="../test.html">test</a>');
-    LegacyUnit.equal(editor.getContent(), '<p><a href="../test.html">test</a></p>');
+    editor.setContent('<a href="../article.html">test</a>');
+    LegacyUnit.equal(editor.getContent(), '<p><a href="../article.html">test</a></p>');
 
-    editor.setContent('<a href="test/test.html">test</a>');
-    LegacyUnit.equal(editor.getContent(), '<p><a href="test/test.html">test</a></p>');
+    editor.setContent('<a href="test/article.html">test</a>');
+    LegacyUnit.equal(editor.getContent(), '<p><a href="test/article.html">test</a></p>');
 
-    editor.setContent('<a href="/test.html">test</a>');
-    LegacyUnit.equal(editor.getContent(), '<p><a href="../../../test.html">test</a></p>');
+    editor.setContent('<a href="/article.html">test</a>');
+    LegacyUnit.equal(editor.getContent(), '<p><a href="../../../article.html">test</a></p>');
 
     editor.setContent('<a href="http://www.somesite.com/test/file.htm">test</a>');
     LegacyUnit.equal(editor.getContent(), '<p><a href="http://www.somesite.com/test/file.htm">test</a></p>');
@@ -87,14 +87,14 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function () {
     editor.settings.remove_script_host = true;
     editor.documentBaseURI = new URI('http://www.site.com/dirA/dirB/dirC/');
 
-    editor.setContent('<a href="test.html">test</a>');
-    LegacyUnit.equal(editor.getContent(), '<p><a href="/dirA/dirB/dirC/test.html">test</a></p>');
+    editor.setContent('<a href="article.html">test</a>');
+    LegacyUnit.equal(editor.getContent(), '<p><a href="/dirA/dirB/dirC/article.html">test</a></p>');
 
-    editor.setContent('<a href="../test.html">test</a>');
-    LegacyUnit.equal(editor.getContent(), '<p><a href="/dirA/dirB/test.html">test</a></p>');
+    editor.setContent('<a href="../article.html">test</a>');
+    LegacyUnit.equal(editor.getContent(), '<p><a href="/dirA/dirB/article.html">test</a></p>');
 
-    editor.setContent('<a href="test/test.html">test</a>');
-    LegacyUnit.equal(editor.getContent(), '<p><a href="/dirA/dirB/dirC/test/test.html">test</a></p>');
+    editor.setContent('<a href="test/article.html">test</a>');
+    LegacyUnit.equal(editor.getContent(), '<p><a href="/dirA/dirB/dirC/test/article.html">test</a></p>');
 
     editor.setContent('<a href="http://www.somesite.com/test/file.htm">test</a>');
     LegacyUnit.equal(editor.getContent(), '<p><a href="http://www.somesite.com/test/file.htm">test</a></p>');
@@ -102,14 +102,14 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function () {
     editor.settings.relative_urls = false;
     editor.settings.remove_script_host = false;
 
-    editor.setContent('<a href="test.html">test</a>');
-    LegacyUnit.equal(editor.getContent(), '<p><a href="http://www.site.com/dirA/dirB/dirC/test.html">test</a></p>');
+    editor.setContent('<a href="article.html">test</a>');
+    LegacyUnit.equal(editor.getContent(), '<p><a href="http://www.site.com/dirA/dirB/dirC/article.html">test</a></p>');
 
-    editor.setContent('<a href="../test.html">test</a>');
-    LegacyUnit.equal(editor.getContent(), '<p><a href="http://www.site.com/dirA/dirB/test.html">test</a></p>');
+    editor.setContent('<a href="../article.html">test</a>');
+    LegacyUnit.equal(editor.getContent(), '<p><a href="http://www.site.com/dirA/dirB/article.html">test</a></p>');
 
-    editor.setContent('<a href="test/test.html">test</a>');
-    LegacyUnit.equal(editor.getContent(), '<p><a href="http://www.site.com/dirA/dirB/dirC/test/test.html">test</a></p>');
+    editor.setContent('<a href="test/article.html">test</a>');
+    LegacyUnit.equal(editor.getContent(), '<p><a href="http://www.site.com/dirA/dirB/dirC/test/article.html">test</a></p>');
 
     editor.setContent('<a href="http://www.somesite.com/test/file.htm">test</a>');
     LegacyUnit.equal(editor.getContent(), '<p><a href="http://www.somesite.com/test/file.htm">test</a></p>');

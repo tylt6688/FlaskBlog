@@ -1,4 +1,12 @@
+import math
+import os
+import re
+import requests
+import traceback
+
 from flask import Flask, render_template, request, redirect, url_for, jsonify, session, make_response
+
+from Utils.Pagetool import get_page
 from Utils.SQLtool import SQLUtil
 from api.tylt_baidu_aip import tylt_AipFace
 
@@ -80,9 +88,53 @@ def register():
         mysql.dispose()
         return render_template('login.html')
 
-@app.route('/editor',methods=['GET'])
+
+@app.route('/article', methods=['GET'])
+def article():
+    p = request.args.get('p','')
+
+    show_shouye_status = 0
+    if p == '':
+        p = 1
+    else:
+        p = int(p)
+        if p > 1:
+            show_shouye_status = 1
+
+    mysql = SQLUtil()
+    sql0 = 'SELECT * FROM article LIMIT ' + str(p*10) + ',10'
+    res = mysql.getAll(sql0)
+    print(res)
+
+    sql = "select count(id) as total from article"
+    count = mysql.getOne(sql)['total']  # 总记录
+    total = int(math.ceil(count / 10.0))  # 总页数
+
+    dic = get_page(total, p)
+    datas = {
+        'p': int(p),
+        'total': total,
+        'show_shouye_status': show_shouye_status,
+        'dic_list': dic
+    }
+    print(datas)
+    mysql.dispose()
+    return render_template('article.html', datas=datas,res=res)
+
+
+@app.route('/editor', methods=['GET'])
 def editor():
     return render_template('editor.html')
+
+
+@app.route('/cancellation', methods=['GET'])
+def cancellation():
+    session.pop('un', None)
+    response = make_response(redirect('/'))
+    response.delete_cookie('userID')
+    return response
+
+
 # 录入人脸信息
 @app.route('/entry_face/', methods=['GET', 'POST'])
 def entry_face():
@@ -133,7 +185,7 @@ def sign_by_face():
                 aip.face_constrast_img2 = face_info
                 contrast_result = aip.face_contrast()
                 if contrast_result['error_code'] == 0 and contrast_result['result']['score'] >= 80:
-                    session['un']=username
+                    session['un'] = username
                     return 'success'
 
         except Exception as e:
@@ -161,6 +213,81 @@ def username_check():
     else:
         return render_template("register_by_face.html")
 
+@app.route('/persioncenter',methods=['GET'])
+def persioncenter():
+    return render_template('personal_center.html')
+
+@app.route('/happybirthday', methods=['GET'])
+def HappyBirthday():
+    mysql = SQLUtil()
+    sql = "SELECT content FROM birthdayarticle"
+    result = mysql.getMany(sql, 20)
+    print(result)
+    return render_template("chinabirthday.html", result=result)
+
+
+@app.route('/getimg',methods=['GET'])
+def getimg():
+    return render_template('repelitimg.html')
+
+
+@app.route('/downloadphoto', methods=['POST'])
+def dowmloadPic(html, startNum):
+    keyword = request.form['search']
+    kv = {
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36'}
+    lastNum = 0
+
+    pageId = 0
+    # 爬取的页数
+    for i in range(1):
+        url = 'http://image.baidu.com/search/flip?tn=baiduimage&ie=utf-8&word=' + keyword + "&pn=" + str(
+            pageId) + "&gsm=?&ct=&ic=0&lm=-1&width=0&height=0"
+        pageId += 10
+        result = requests.get(url, headers=kv)
+        lastNum = dowmloadPic(result.text, keyword, lastNum)
+    pic_url = re.findall('"objURL":"(.*?)",', html, re.S)
+    i = startNum
+
+    root = 'static/reptileimg/'
+    print('找到关键词:' + keyword + '的图片，现在开始下载图片...')
+
+    for each in pic_url:
+        print('正在下载第' + str(i + 1) + '张图片，图片地址:' + str(each))
+        path = root + '{0}.{1}'.format(str(i + 1), 'jpg')
+        mysql = SQLUtil()
+        sql = "INSERT INTO img(imgurl) VALUES ('%s')" % (path)
+        mysql.insertOne(sql)
+        try:
+            if not os.path.exists(root):
+                os.mkdir(root)
+            if not os.path.exists(path):
+                pic = requests.get(each, headers=kv, timeout=10)
+                with open(path, 'wb') as f:
+                    f.write(pic.content)
+                    f.close()
+
+        except:
+            traceback.print_exc()
+            print('【错误】当前图片无法下载')
+            continue
+        i += 1
+    return i,render_template('repelitimg.html',path=path)
+
+
+
+
+
+
+
+@app.route("/test")
+def ip():
+    ip = request.remote_addr
+    return render_template("test.html", ip=ip)
+
+
+
+
 
 if __name__ == '__main__':
-    app.run(host='127.0.0.1', port=8080, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)

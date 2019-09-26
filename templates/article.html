@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
+
+    <title>科技热点</title>
+    <style type="text/css">
+
+        #view-paner {
+            background: url("../static/images/1.jpg");
+            background-repeat: repeat-x;
+        }
+
+    </style>
+
+</head>
+<body>
+<div class="container-fluid">
+    <div class="container-fluid">
+        <div class="jumbotron" id="view-paner">
+            <h1>欢迎{{ user }}来到本站!</h1>
+            <h3>欢迎来到主页</h3>
+            <a class="btn btn-primary btn-lg" href="https://blog.csdn.net/tylt6688" target="_blank"
+               role="button">看到更多</a>
+            <a class="btn btn-primary btn-lg" href="/" target="_blank"
+               role="button">回到主页</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="panel panel-info">
+            {% for v in range(res|length) %}
+                <div>
+                    <div class="panel-heading">
+                        <blockquote data-toggle="collapse"
+                                    href="#collapseExample-{{ v }}" aria-expanded="false"
+                                    aria-controls="collapseExample">
+                            <h2 class="panel-title">
+                                {{ res[v].title }}
+                            </h2>
+                        </blockquote>
+                    </div>
+                    <div class="collapse" id="collapseExample-{{ v }}">
+                        <div class="well">
+                            <div class="panel-body">
+                                {{ res[v].content }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <ul style="margin-left: 500px" class="pagination">
+            {% if datas.show_shouye_status==1 %}
+                <li class=''><a href='{{ url_for('article', p=1) }}'>首页</a></li>
+                <li class=''><a href='{{ url_for('article', p=datas.p - 1) }}'>上一页</a></li>
+            {% endif %}
+
+            {% for dic in datas.dic_list %}
+                {% if dic==datas.p %}
+                    <li class="active"><a href="{{ url_for('article', p=dic) }}">{{ dic }}</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('article',p=dic) }}">{{ dic }}</a></li>
+                {% endif %}
+            {% endfor %}
+
+            {% if datas.p < datas.total %}
+                <li class=''><a href='{{ url_for('article',p=datas.p + 1) }}'>下一页</a></li>
+                <li class=''><a href='{{ url_for('article',p=datas.total) }}'>尾页</a></li>
+            {% endif %}
+            共{{ datas.total }}页
+        </ul>
+    </div>
+
+
+</div>
+</body>
+<script src="../static/js/jquery.min.js"></script>
+<script src="../static/js/bootstrap.js"></script>
+</html>

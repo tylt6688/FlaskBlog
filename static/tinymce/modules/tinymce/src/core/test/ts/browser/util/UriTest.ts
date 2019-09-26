@@ -38,9 +38,9 @@ UnitTest.asynctest('browser.tinymce.core.util.UriTest', function () {
   });
 
   suite.test('parseRelativeURLs', function () {
-    LegacyUnit.equal(new URI('./test.html').getURI(), 'http://mce_host/test.html');
-    LegacyUnit.equal(new URI('test.html').getURI(), 'http://mce_host/test.html');
-    LegacyUnit.equal(new URI('/assets/test.html').getURI(), 'http://mce_host/assets/test.html');
+    LegacyUnit.equal(new URI('./article.html').getURI(), 'http://mce_host/article.html');
+    LegacyUnit.equal(new URI('test.html').getURI(), 'http://mce_host/article.html');
+    LegacyUnit.equal(new URI('/assets/article.html').getURI(), 'http://mce_host/assets/article.html');
   });
 
   suite.test('relativeURLs', function () {
