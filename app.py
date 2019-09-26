@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify, sessions, make_response
+from flask import Flask, render_template, request, redirect, url_for, jsonify, session, make_response
 from Utils.SQLtool import SQLUtil
 from api.tylt_baidu_aip import tylt_AipFace
 
@@ -23,10 +23,11 @@ def result():
 
 @app.route('/', methods=['GET'])
 def home():
-    if request.cookies.get('userID') is not None:
+    # user = sessions['username']
+    if request.cookies.get('userID') is not None or 'un' in session:
         hide = 'none'
         show = 'block'
-        username = request.cookies.get('userID')
+        username = request.cookies.get('userID') or session["un"]
         print(username)
         return render_template('index.html', user=username, hide=hide, show=show)
     else:
@@ -79,7 +80,9 @@ def register():
         mysql.dispose()
         return render_template('login.html')
 
-
+@app.route('/editor',methods=['GET'])
+def editor():
+    return render_template('editor.html')
 # 录入人脸信息
 @app.route('/entry_face/', methods=['GET', 'POST'])
 def entry_face():
@@ -130,6 +133,7 @@ def sign_by_face():
                 aip.face_constrast_img2 = face_info
                 contrast_result = aip.face_contrast()
                 if contrast_result['error_code'] == 0 and contrast_result['result']['score'] >= 80:
+                    session['un']=username
                     return 'success'
 
         except Exception as e:
@@ -149,11 +153,8 @@ def username_check():
 
         if user_result['COUNT(name)'] == 0:
             print(jsonify({"user_exits": False}))
-
             return jsonify({"user_exits": False})
         else:
-            resp = make_response(redirect(url_for('home')))
-            resp.set_cookie('userID', username)
             print(jsonify({"user_exits": True}))
             return jsonify({"user_exits": True})
 

@@ -53,15 +53,46 @@
                         {% endif %}
                         <div class="col-md-offset-5">
                             <div class="checkbox">
-                                <label> <input type="checkbox"><a>已阅读并同意协议内容</a>
+                                <label> <input type="checkbox"><a data-toggle="modal"
+                                                                  data-target="#myModal">已阅读并同意协议内容</a>
+
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+                                         aria-labelledby="myModalLabel">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close"><span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                    <h4 class="modal-title" id="myModalLabel">协议内容</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    这只是一个协议，真的只是一个协议。
+                                                    <br/>
+                                                    重要的事情说三遍：<br/>for i in range(2):<br/>这不是开玩笑，这就是写着玩。
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-primary" data-dismiss="modal">
+                                                        接受协议
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </label>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-md-5 col-md-offset-5">
-                                <button type="submit" class="btn btn-success btn-lg">登录</button>
-                                <button type="button" onclick="regist()" class="btn btn-success btn-lg">注册</button>
+                                <button type="submit" class="btn btn-success btn-lg" data-toggle="tooltip"
+                                        data-placement="bottom" title="去登陆">登录
+                                </button>
+                                <button type="button" onclick="regist()" class="btn btn-success btn-lg"
+                                        data-toggle="tooltip" data-placement="bottom" title="没有账号？点这里">注册
+                                </button>
 
                             </div>
                         </div>
@@ -69,7 +100,7 @@
                 </div>
             </div>
         </form>
-    <button type="button" onclick="facelogin()" class="btn btn-default">尝试人脸登录</button>
+        <button type="button" onclick="facelogin()" class="btn btn-default">尝试人脸登录</button>
     </div>
 </div>
 </body>
@@ -79,6 +110,7 @@
     function regist() {
         window.location.href = "/register"
     }
+
     function facelogin() {
         window.location.href = "/sign_in_by_face"
 

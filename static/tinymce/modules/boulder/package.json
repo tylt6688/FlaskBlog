@@ -1,0 +1,37 @@
+{
+  "name": "@ephox/boulder",
+  "version": "3.3.35",
+  "description": "Basic javascript object validation",
+  "dependencies": {
+    "@ephox/katamari": "^4.0.3",
+    "@ephox/sand": "^3.0.12"
+  },
+  "scripts": {
+    "test": "bedrock-auto -b phantomjs -d src/test/ts",
+    "test-manual": "bedrock -d src/test/ts",
+    "prepublishOnly": "tsc -b"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tinymce/tinymce"
+  },
+  "keywords": [
+    "validation"
+  ],
+  "files": [
+    "lib/main",
+    "lib/demo",
+    "lib/test",
+    "src",
+    "tsconfig.json",
+    "readme.md",
+    "LEGAL.txt",
+    "CHANGELOG.txt",
+    "LICENSE.txt"
+  ],
+  "author": "Ephox Corporation",
+  "license": "Apache-2.0",
+  "main": "./lib/main/ts/ephox/boulder/api/Main.js",
+  "module": "./lib/main/ts/ephox/boulder/api/Main.js",
+  "types": "./lib/main/ts/ephox/boulder/api/Main.d.ts"
+}
