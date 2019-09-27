@@ -14,10 +14,11 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = '7f23059270db4a5686a9fd87662cb510'
 
 """
-定义全局数据
+
 """
 
 
+# 定义全局数据
 @app.context_processor
 def result():
     mysql = SQLUtil()
@@ -31,7 +32,6 @@ def result():
 
 @app.route('/', methods=['GET'])
 def home():
-    # user = sessions['username']
     if request.cookies.get('userID') is not None or 'un' in session:
         hide = 'none'
         show = 'block'
@@ -58,6 +58,7 @@ def login():
             message = "您还没在本站进行注册！"
             return render_template('login.html', message=message)
         else:
+            # cookie设置在这里！！！！
             from werkzeug.security import generate_password_hash, check_password_hash
             if res[0]['name'] == username and check_password_hash(res[0]['password'], password):
                 user = res[0]['name']
@@ -78,20 +79,27 @@ def register():
     if request.method == 'GET':
         return render_template('register.html')
     else:
-        mysql = SQLUtil()
         username = request.form['username']
+        passwordc = request.form['passwordc']
 
-        from werkzeug.security import generate_password_hash
+        mysql = SQLUtil()
+        from werkzeug.security import generate_password_hash, check_password_hash
         password = generate_password_hash(request.form['password'])
-        sql = "INSERT INTO user(name, password) VALUE ('%s','%s')" % (username, password)
-        mysql.insertOne(sql)
-        mysql.dispose()
-        return render_template('login.html')
+        print(passwordc, password)
+
+        if check_password_hash(password, passwordc):
+            sql = "INSERT INTO user(name, password) VALUE ('%s','%s')" % (username, password)
+            mysql.insertOne(sql)
+            mysql.dispose()
+            return render_template('login.html')
+        else:
+            message = "您输入的两次密码不相同，请重新输入"
+            return render_template('register.html', message=message)
 
 
 @app.route('/article', methods=['GET'])
 def article():
-    p = request.args.get('p','')
+    p = request.args.get('p', '')
 
     show_shouye_status = 0
     if p == '':
@@ -102,7 +110,7 @@ def article():
             show_shouye_status = 1
 
     mysql = SQLUtil()
-    sql0 = 'SELECT * FROM article LIMIT ' + str(p*10) + ',10'
+    sql0 = 'SELECT * FROM article LIMIT ' + str(p * 10) + ',10'
     res = mysql.getAll(sql0)
     print(res)
 
@@ -118,8 +126,9 @@ def article():
         'dic_list': dic
     }
     print(datas)
+    username = request.cookies.get('userID') or session["un"]
     mysql.dispose()
-    return render_template('article.html', datas=datas,res=res)
+    return render_template('article.html', user=username, datas=datas, res=res)
 
 
 @app.route('/editor', methods=['GET'])
@@ -138,6 +147,8 @@ def cancellation():
 # 录入人脸信息
 @app.route('/entry_face/', methods=['GET', 'POST'])
 def entry_face():
+    # 获取登录人的cookie
+    username = request.cookies.get('userID')
     mysql = SQLUtil()
     if request.method == 'POST':
         data = request.form.get('face-info')
@@ -155,7 +166,7 @@ def entry_face():
             return 'not_clear'
         else:
             try:
-                sql = "UPDATE user SET face_info = '%s' where name= '%s' " % (face_info, 'tylt')
+                sql = "UPDATE user SET face_info = '%s' where name= '%s' " % (face_info, username)
                 mysql.update(sql)
                 mysql.dispose()
                 return 'success'
@@ -194,7 +205,7 @@ def sign_by_face():
     return render_template('sign_in_by_face.html')
 
 
-# 注册用户名验证
+# 人脸登录时的注册用户名验证
 @app.route('/resver/', methods=['GET'])
 def username_check():
     if request.method == "GET":
@@ -213,9 +224,30 @@ def username_check():
     else:
         return render_template("register_by_face.html")
 
-@app.route('/persioncenter',methods=['GET'])
+
+@app.route('/persioncenter', methods=['GET'])
 def persioncenter():
     return render_template('personal_center.html')
+
+
+@app.route('/updatepassword', methods=['POST'])
+def updatepassword():
+    username = request.cookies.get('userID') or session["un"]
+    password = request.form['password']
+    passwordc = request.form['passwordc']
+    if password == passwordc:
+        from werkzeug.security import generate_password_hash
+        password = generate_password_hash(password)
+        mysql = SQLUtil()
+        sql = "UPDATE user SET password = '%s' WHERE name = '%s'" % (password, username)
+        mysql.update(sql)
+        mysql.dispose()
+        message = "修改密码成功！"
+        return render_template('personal_center.html', message=message)
+    else:
+        message = "您两次输入的密码有误！"
+        return render_template('personal_center.html', message=message)
+
 
 @app.route('/happybirthday', methods=['GET'])
 def HappyBirthday():
@@ -226,38 +258,30 @@ def HappyBirthday():
     return render_template("chinabirthday.html", result=result)
 
 
-@app.route('/getimg',methods=['GET'])
-def getimg():
+@app.route('/repelitimg', methods=['GET'])
+def repeliting():
+    mysql = SQLUtil()
+    sql = "select imgurl from img"
+    rs = mysql.getAll(sql)
+    mysql.dispose()
+    data = []
+    for v in range(len(rs)):
+        data.append( rs[v]['imgurl'])
+    if len(data) != 0 :
+        return render_template('repelitimg.html', data=data)
     return render_template('repelitimg.html')
 
 
-@app.route('/downloadphoto', methods=['POST'])
-def dowmloadPic(html, startNum):
-    keyword = request.form['search']
-    kv = {
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36'}
-    lastNum = 0
-
-    pageId = 0
-    # 爬取的页数
-    for i in range(1):
-        url = 'http://image.baidu.com/search/flip?tn=baiduimage&ie=utf-8&word=' + keyword + "&pn=" + str(
-            pageId) + "&gsm=?&ct=&ic=0&lm=-1&width=0&height=0"
-        pageId += 10
-        result = requests.get(url, headers=kv)
-        lastNum = dowmloadPic(result.text, keyword, lastNum)
+def dowmloadPic(html, keyword, startNum):
+    kv = {'user-agent': 'Mozilla/5.0'}
     pic_url = re.findall('"objURL":"(.*?)",', html, re.S)
     i = startNum
-
     root = 'static/reptileimg/'
     print('找到关键词:' + keyword + '的图片，现在开始下载图片...')
-
     for each in pic_url:
         print('正在下载第' + str(i + 1) + '张图片，图片地址:' + str(each))
         path = root + '{0}.{1}'.format(str(i + 1), 'jpg')
-        mysql = SQLUtil()
-        sql = "INSERT INTO img(imgurl) VALUES ('%s')" % (path)
-        mysql.insertOne(sql)
+        insertsql(path)
         try:
             if not os.path.exists(root):
                 os.mkdir(root)
@@ -266,28 +290,82 @@ def dowmloadPic(html, startNum):
                 with open(path, 'wb') as f:
                     f.write(pic.content)
                     f.close()
-
         except:
             traceback.print_exc()
             print('【错误】当前图片无法下载')
             continue
         i += 1
-    return i,render_template('repelitimg.html',path=path)
+    return i
+
+def insertsql(path):
+    mysql = SQLUtil()
+    sql = "INSERT INTO img(imgurl) VALUES ('%s')" % str(path)
+    print(sql)
+    mysql.insertOne(sql)
+    mysql.dispose()
+
+@app.route("/pre", methods=['POST'])
+def pre():
+    kv = {'user-agent': 'Mozilla/5.0'}
+    lastNum = 0
+    words = []
+    word = request.form['search']
+    words.append(word)
+    for word in words:
+        if word.strip() == "exit":
+            break
+        pageId = 0
+        # 此处的参数为需爬取的页数
+        for i in range(1):
+            url = 'http://image.baidu.com/search/flip?tn=baiduimage&ie=utf-8&word=' + word + "&pn=" + str(
+                pageId) + "&gsm=?&ct=&ic=0&lm=-1&width=0&height=0"
+            pageId += 1
+            result = requests.get(url, headers=kv)
+            lastNum = dowmloadPic(result.text, word, lastNum)
 
 
+# 逆向追踪ip
+# @app.route("/test")
+# def ip():
+#     ip = request.remote_addr
+#     return render_template("personal_center.html", ip=ip)
 
 
+@app.route('/yulu', methods=['GET'])
+def yulu():
+    mysql = SQLUtil()
+    sql = "SELECT content FROM yulu"
+    result = mysql.getMany(sql, 10)
+    return render_template("yulu.html", res=result)
 
 
+@app.route('/xinqing', methods=['GET'])
+def xinqing():
+    mysql = SQLUtil()
+    sql = "SELECT content FROM xinqing"
+    result = mysql.getMany(sql, 10)
+    return render_template("xinqing.html", res=result)
 
-@app.route("/test")
-def ip():
-    ip = request.remote_addr
-    return render_template("test.html", ip=ip)
+@ app.route('/xiaozhishi', methods=['GET'])
+def xiaozhishi():
+    mysql = SQLUtil()
+    sql = "SELECT content FROM xiaozhishi"
+    result = mysql.getMany(sql, 10)
+    return render_template("xiaozhishi.html", res=result)
 
+@ app.route('/duanzi', methods=['GET'])
+def duanzi():
+    mysql = SQLUtil()
+    sql = "SELECT content FROM duanzi"
+    result = mysql.getMany(sql, 10)
+    return render_template("duanzi.html", res=result)
 
-
-
+@ app.route('/joke', methods=['GET'])
+def joke():
+    mysql = SQLUtil()
+    sql = "SELECT content FROM joke"
+    result = mysql.getMany(sql, 10)
+    return render_template("joke.html", res=result)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

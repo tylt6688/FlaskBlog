@@ -16,109 +16,116 @@
       url(../static/images/chinabirthday.jpg) no-repeat center 0px">
     <div class="bgMask"></div>
 </div>
-<div class="row" style="margin-top: -220px">
-    <div class="col-md-6 col-md-offset-3">
-        <div class="page-header">
-            <h1 style="margin-left: 140px">热烈祝贺新中国成立70周年
-                <small>国庆特辑</small>
-            </h1>
+<div class="container-fluid">
+    <div class="row" style="margin-top: -220px">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="page-header">
+                <h1 style="margin-left: 140px">热烈祝贺新中国成立70周年
+                    <small>国庆特辑</small>
+                </h1>
+            </div>
+        </div>
+
+    </div>
+    <div class="row" style="margin-left: 100px">
+        <div class="col-md-2 ">
+            <button type="button" class="btn btn-danger btn-lg" data-toggle="modal" data-target="#myModal1">70周年国庆祝福语
+            </button>
+            <!-- Modal -->
+            <div class="modal fade bs-example-modal-lg" id="myModal1" tabindex="-1" role="dialog"
+                 aria-labelledby="myModalLabel">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">70周年国庆祝福语</h4>
+                        </div>
+                        <div class="modal-body">
+                            {% for v in result %}
+                                <br>
+
+                                <p style="margin-top: 5px" href='{{ url_for('HappyBirthday') }}'>
+                                    {{ v.content }}
+                                </p>
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-2 col-md-offset-1">
+            <button type="button" class="btn btn-danger btn-lg" data-toggle="modal" data-target="#myModal1">70周年国庆活动安排
+            </button>
+            <div class="modal fade bs-example-modal-lg" id="myModal1" tabindex="-1" role="dialog"
+                 aria-labelledby="myModalLabel">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">70周年国庆活动安排</h4>
+                        </div>
+                        <div class="modal-body">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 col-md-offset-1">
+            <button type="button" class="btn btn-danger btn-lg" data-toggle="modal" data-target="#myModal1">70周年国庆阅兵
+            </button>
+            <div class="modal fade bs-example-modal-lg" id="myModal1" tabindex="-1" role="dialog"
+                 aria-labelledby="myModalLabel">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">70周年国庆阅兵</h4>
+                        </div>
+                        <div class="modal-body">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 col-md-offset-1">
+            <button type="button" class="btn btn-danger btn-lg" data-toggle="modal" data-target="#myModal1">历年国庆阅兵仪式
+            </button>
+            <div class="modal fade bs-example-modal-lg" id="myModal1" tabindex="-1" role="dialog"
+                 aria-labelledby="myModalLabel">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">历年国庆阅兵仪式</h4>
+                        </div>
+                        <div class="modal-body">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-<div class="row" style="margin-left: 100px">
-    <div class="col-md-2 ">
-        <button type="button" class="btn btn-danger btn-lg" data-toggle="modal" data-target="#myModal1">70周年国庆祝福语
-        </button>
-        <!-- Modal -->
-        <div class="modal fade bs-example-modal-lg" id="myModal1" tabindex="-1" role="dialog"
-             aria-labelledby="myModalLabel">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">70周年国庆祝福语</h4>
-                    </div>
-                    <div class="modal-body">
-                        {% for v in result %}
-                            <br>
-
-                            <p style="margin-top: 5px" href='{{ url_for('HappyBirthday') }}'>
-                                {{ v.content }}
-                            </p>
-                        {% endfor %}
-
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
+<div class="row">
+    <div class="col-md-4 col-md-offset-5">
+        <a style="margin: 20px 0 0 70px"  type="button" href="/" class="btn btn-default btn-lg">返回主页</a>
     </div>
-    <div class="col-md-2 col-md-offset-1">
-        <button type="button" class="btn btn-danger btn-lg" data-toggle="modal" data-target="#myModal1">70周年国庆活动安排
-        </button>
-        <div class="modal fade bs-example-modal-lg" id="myModal1" tabindex="-1" role="dialog"
-             aria-labelledby="myModalLabel">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">70周年国庆活动安排</h4>
-                    </div>
-                    <div class="modal-body">
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-2 col-md-offset-1">
-        <button type="button" class="btn btn-danger btn-lg" data-toggle="modal" data-target="#myModal1">70周年国庆阅兵
-        </button>
-        <div class="modal fade bs-example-modal-lg" id="myModal1" tabindex="-1" role="dialog"
-             aria-labelledby="myModalLabel">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">70周年国庆阅兵</h4>
-                    </div>
-                    <div class="modal-body">
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-2 col-md-offset-1">
-        <button type="button" class="btn btn-danger btn-lg" data-toggle="modal" data-target="#myModal1">历年国庆阅兵仪式
-        </button>
-        <div class="modal fade bs-example-modal-lg" id="myModal1" tabindex="-1" role="dialog"
-             aria-labelledby="myModalLabel">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">历年国庆阅兵仪式</h4>
-                    </div>
-                    <div class="modal-body">
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
 </div>
 </body>
 <script src="../static/js/jquery.min.js"></script>

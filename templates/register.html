@@ -11,6 +11,11 @@
         .row {
             margin-top: 32px;
         }
+
+        .message-check {
+            color: #c9302c;
+            margin-left: 660px;
+        }
     </style>
     <title>注册</title>
 </head>
@@ -19,7 +24,7 @@
 <div class="container-fluid">
 
     <div class="row">
-        <form class="form-inline" action="/register" method="post">
+        <form class="form-inline" action="/register" method="POST">
             <div class="panel panel-primary">
                 <div class="panel-heading">用户注册</div>
                 <div class="panel-body">
@@ -40,10 +45,13 @@
                     <div class="row">
                         <div class="col-md-offset-5">
                             <label>再次输入: </label> <input type="password" class="form-control" name="passwordc"
-                                                         id="passwordc" placeholder="请再次输入密码">
+                                                         placeholder="请再次输入密码">
                         </div>
                     </div>
                     <div class="row">
+                        {% if message %}
+                            <p class="message-check"> {{ message }}</p>
+                        {% endif %}
                         <div class="col-md-offset-5">
                             <div class="checkbox">
                                 <label> <input type="checkbox">已阅读并同意协议内容
@@ -51,10 +59,8 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-offset-1">
-                                    <button id="register" onclick="register()" class="btn btn-success btn-lg">
+                                    <button id="register" class="btn btn-success btn-lg">
                                         提交信息
-                                    </button>
-                                    <button type="button" onclick="enterface()" class="btn btn-success btn-lg">人脸注册
                                     </button>
                                 </div>
                             </div>
@@ -67,9 +73,7 @@
 </div>
 </body>
 <script>
-    function enterface() {
-        window.location.href = "/entry_face"
-    }
+
 </script>
 <script src="../static/js/jquery.min.js"></script>
 <script src="../static/js/bootstrap.js"></script>

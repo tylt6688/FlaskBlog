@@ -71,8 +71,13 @@
                 <li class=''><a href='{{ url_for('article',p=datas.p + 1) }}'>下一页</a></li>
                 <li class=''><a href='{{ url_for('article',p=datas.total) }}'>尾页</a></li>
             {% endif %}
-            共{{ datas.total }}页
         </ul>
+        <div class="row">
+            <div class="col-md-1 col-md-offset-10">
+                <p class="bg-primary">共{{ datas.total }}页</p>
+            </div>
+        </div>
+
     </div>
 
 
