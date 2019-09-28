@@ -53,8 +53,9 @@
                         {% endif %}
                         <div class="col-md-offset-5">
                             <div class="checkbox">
-                                <label> <input type="checkbox"><a data-toggle="modal"
-                                                                  data-target="#myModal">已阅读并同意协议内容</a>
+                                <label><a style="margin-left: 50px" data-toggle="modal"
+                                          data-target="#myModal">已阅读并同意协议内容</a>
+                                    <a href="/register"><p style="margin-left: 65px">没有账号？去注册</p></a>
 
 
                                     <!-- Modal -->
@@ -88,11 +89,13 @@
                         <div class="row">
                             <div class="col-md-5 col-md-offset-5">
                                 <button type="submit" class="btn btn-success btn-lg" data-toggle="tooltip"
-                                        data-placement="bottom" title="去登陆">登录
+                                        data-placement="bottom" title="去登陆">账号登录
                                 </button>
-                                <button type="button" onclick="regist()" class="btn btn-success btn-lg"
-                                        data-toggle="tooltip" data-placement="bottom" title="没有账号？点这里">注册
+                                <button style="margin-left: 20px" type="button" onclick="facelogin()"
+                                        class="btn btn-success btn-lg"
+                                        data-toggle="tooltip" data-placement="bottom" title="人脸登录">人脸登录
                                 </button>
+
 
                             </div>
                         </div>
@@ -100,16 +103,13 @@
                 </div>
             </div>
         </form>
-        <button type="button" onclick="facelogin()" class="btn btn-default">尝试人脸登录</button>
     </div>
 </div>
 </body>
 <script src="../static/js/jquery.min.js"></script>
 <script src="../static/js/bootstrap.js"></script>
 <script>
-    function regist() {
-        window.location.href = "/register"
-    }
+
 
     function facelogin() {
         window.location.href = "/sign_in_by_face"

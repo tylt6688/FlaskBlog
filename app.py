@@ -97,6 +97,19 @@ def register():
             return render_template('register.html', message=message)
 
 
+@app.route('/deleteuser')
+def deleteuser():
+    username = request.cookies.get('userID') or session["un"]
+    sql = "DELETE FROM user WHERE name = '%s'" % username
+    mysql = SQLUtil()
+    mysql.delete(sql)
+    mysql.dispose()
+    session.pop('un', None)
+    response = make_response(redirect('/'))
+    response.delete_cookie('userID')
+    return response
+
+
 @app.route('/article', methods=['GET'])
 def article():
     p = request.args.get('p', '')
@@ -266,8 +279,8 @@ def repeliting():
     mysql.dispose()
     data = []
     for v in range(len(rs)):
-        data.append( rs[v]['imgurl'])
-    if len(data) != 0 :
+        data.append(rs[v]['imgurl'])
+    if len(data) != 0:
         return render_template('repelitimg.html', data=data)
     return render_template('repelitimg.html')
 
@@ -297,12 +310,14 @@ def dowmloadPic(html, keyword, startNum):
         i += 1
     return i
 
+
 def insertsql(path):
     mysql = SQLUtil()
     sql = "INSERT INTO img(imgurl) VALUES ('%s')" % str(path)
     print(sql)
     mysql.insertOne(sql)
     mysql.dispose()
+
 
 @app.route("/pre", methods=['POST'])
 def pre():
@@ -346,26 +361,30 @@ def xinqing():
     result = mysql.getMany(sql, 10)
     return render_template("xinqing.html", res=result)
 
-@ app.route('/xiaozhishi', methods=['GET'])
+
+@app.route('/xiaozhishi', methods=['GET'])
 def xiaozhishi():
     mysql = SQLUtil()
     sql = "SELECT content FROM xiaozhishi"
     result = mysql.getMany(sql, 10)
     return render_template("xiaozhishi.html", res=result)
 
-@ app.route('/duanzi', methods=['GET'])
+
+@app.route('/duanzi', methods=['GET'])
 def duanzi():
     mysql = SQLUtil()
     sql = "SELECT content FROM duanzi"
     result = mysql.getMany(sql, 10)
     return render_template("duanzi.html", res=result)
 
-@ app.route('/joke', methods=['GET'])
+
+@app.route('/joke', methods=['GET'])
 def joke():
     mysql = SQLUtil()
     sql = "SELECT content FROM joke"
     result = mysql.getMany(sql, 10)
     return render_template("joke.html", res=result)
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

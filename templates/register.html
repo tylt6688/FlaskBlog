@@ -16,10 +16,13 @@
             color: #c9302c;
             margin-left: 660px;
         }
+
+        canvas {
+            width: 100%;
+        }
     </style>
     <title>注册</title>
 </head>
-<body>
 
 <div class="container-fluid">
 
@@ -54,12 +57,14 @@
                         {% endif %}
                         <div class="col-md-offset-5">
                             <div class="checkbox">
-                                <label> <input type="checkbox">已阅读并同意协议内容
+                                <label> <input style="margin-left: 40px" type="checkbox">已阅读并同意协议内容
                                 </label>
+
+
                             </div>
                             <div class="row">
-                                <div class="col-md-offset-1">
-                                    <button id="register" class="btn btn-success btn-lg">
+                                <div style="margin-left: 100px">
+                                    <button id="register" class="btn btn-default btn-lg">
                                         提交信息
                                     </button>
                                 </div>

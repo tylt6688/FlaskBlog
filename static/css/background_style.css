@@ -1,0 +1,19 @@
+html body{
+    overflow: hidden;
+  margin: 0;
+  background-color: #000;
+}
+.instructions {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  letter-spacing: 2px;
+  pointer-events: none;
+}
+
+canvas {
+  width: 100%;
+}
