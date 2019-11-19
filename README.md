@@ -1,5 +1,5 @@
 # FlaskBlog
-##项目结构
+> 项目结构
 
 python+flask+Bootstrap
 
