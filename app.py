@@ -18,6 +18,16 @@ app.config["SECRET_KEY"] = '7f23059270db4a5686a9fd87662cb510'
 """
 
 
+# 定义全局拦截器
+# @app.before_request
+# def myredirect():
+#     if not request.path == '/login':
+#         if request.cookies.get('userID') is not None or 'un' in session:
+#             pass
+#         else:
+#             return render_template('index.html')
+
+
 # 定义全局数据
 @app.context_processor
 def result():
@@ -44,13 +54,23 @@ def home():
         return render_template('index.html', hide=hide, show=show)
 
 
+@app.route('/search', methods=['POST'])
+def search():
+    keyword = request.form['keyword']
+    mysql = SQLUtil()
+    sql = "SELECT * FROM article WHERE title LIKE '%%%%%s%%%%'" % keyword
+    res = mysql.getAll(sql)
+    mysql.dispose()
+    username = request.cookies.get('userID') or session["un"]
+    return render_template('searchinfo.html', res=res, username=username)
+
+
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
         mysql = SQLUtil()
-
         sql = "SELECT * FROM user WHERE name='%s'" % username
         res = mysql.getAll(sql)
         mysql.dispose()
@@ -147,6 +167,17 @@ def article():
 @app.route('/editor', methods=['GET'])
 def editor():
     return render_template('editor.html')
+
+
+@app.route('/sendArticle', methods=['POST'])
+def sendArticle():
+    title = request.form['title']
+    content = request.form['content']
+    mysql = SQLUtil()
+    sql = "INSERT INTO article(title, content) VALUE ('%s','%s')" % (title, content)
+    mysql.insertOne(sql)
+    mysql.dispose()
+    return render_template('index.html')
 
 
 @app.route('/cancellation', methods=['GET'])
@@ -271,6 +302,26 @@ def HappyBirthday():
     return render_template("chinabirthday.html", result=result)
 
 
+@app.route("/searchImg", methods=['POST'])
+def pre():
+    kv = {'user-agent': 'Mozilla/5.0'}
+    lastNum = 0
+    words = []
+    word = request.form['keyword']
+    words.append(word)
+    for word in words:
+        if word.strip() == "exit":
+            break
+        pageId = 0
+        # 此处的参数为需爬取的页数
+        for i in range(1):
+            url = 'http://image.baidu.com/search/flip?tn=baiduimage&ie=utf-8&word=' + word + "&pn=" + str(
+                pageId) + "&gsm=?&ct=&ic=0&lm=-1&width=0&height=0"
+            pageId += 1
+            result = requests.get(url, headers=kv)
+            lastNum = dowmloadPic(result.text, word, lastNum)
+
+
 @app.route('/repelitimg', methods=['GET'])
 def repeliting():
     mysql = SQLUtil()
@@ -319,31 +370,13 @@ def insertsql(path):
     mysql.dispose()
 
 
-@app.route("/pre", methods=['POST'])
-def pre():
-    kv = {'user-agent': 'Mozilla/5.0'}
-    lastNum = 0
-    words = []
-    word = request.form['search']
-    words.append(word)
-    for word in words:
-        if word.strip() == "exit":
-            break
-        pageId = 0
-        # 此处的参数为需爬取的页数
-        for i in range(1):
-            url = 'http://image.baidu.com/search/flip?tn=baiduimage&ie=utf-8&word=' + word + "&pn=" + str(
-                pageId) + "&gsm=?&ct=&ic=0&lm=-1&width=0&height=0"
-            pageId += 1
-            result = requests.get(url, headers=kv)
-            lastNum = dowmloadPic(result.text, word, lastNum)
 
 
-# 逆向追踪ip
-# @app.route("/test")
-# def ip():
-#     ip = request.remote_addr
-#     return render_template("personal_center.html", ip=ip)
+# 逆向追踪ip进行后台显示
+@app.route("/ipview")
+def ip():
+    ip = request.remote_addr
+    return render_template("personal_center.html", ip=ip)
 
 
 @app.route('/yulu', methods=['GET'])

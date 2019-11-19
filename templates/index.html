@@ -47,11 +47,11 @@
 <div class="container-fluid ">
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
-            <a class="navbar-brand" role="presentation" href="#">天宇龙腾</a>
+            <a class="navbar-brand" role="presentation" href="#">#天宇龙腾#</a>
 
-            <form class="navbar-form navbar-left">
+            <form action="/search" method="post" class="navbar-form navbar-left">
                 <div class="form-group">
-                    <input type="text" class="form-control" placeholder="搜索你想要的···">
+                    <input type="text" name="keyword" class="form-control" placeholder="搜索你想要的···">
                 </div>
                 <button type="submit" class="btn btn-default">搜索</button>
             </form>
@@ -143,7 +143,7 @@
                 <br/>
                 <li role="presentation"><a href="/yulu">名言语录</a></li>
                 <br/>
-                <li role="presentation"><a href="duanzi">搞笑段子</a></li>
+                <li role="presentation"><a href="/duanzi">搞笑段子</a></li>
                 <br/>
                 <li role="presentation"><a href="/xiaozhishi">小知识</a></li>
                 <br/>
@@ -152,28 +152,43 @@
         </div>
 
         <div class="col-md-7">
-            <div class="panel panel-info">
-                {% for v in range(result|length) %}
-                    <div style="margin-top: 10px">
-                        <div class="panel-heading">
-                            <a data-toggle="collapse"
-                               href="#collapseExample-{{ v }}" aria-expanded="false"
-                               aria-controls="collapseExample">
-                                <h2 class="panel-title">
-                                    {{ result[v].title }}
-                                </h2>
-                            </a>
-                        </div>
-                        <div class="collapse" id="collapseExample-{{ v }}">
-                            <div class="well">
-                                <div class="panel-body">
-                                    {{ result[v].content }}
+{#            <div id="app">#}
+{#                <h1>Hello 这是一个路由测试!</h1>#}
+{#                <p>#}
+{#                    <!-- 使用 router-link 组件来导航. -->#}
+{#                    <!-- 通过传入 `to` 属性指定链接. -->#}
+{#                    <!-- <router-link> 默认会被渲染成一个 `<a>` 标签 -->#}
+{#                    <router-link to="/happybirthday">Go to Foo</router-link>#}
+{#                    <router-link to="/xinqing">Go to Bar</router-link>#}
+{#                </p>#}
+{#                <!-- 路由出口 -->#}
+{#                <!-- 路由匹配到的组件将渲染在这里 -->#}
+{#                <router-view></router-view>#}
+{#            </div>#}
+
+
+                        <div class="panel panel-info">
+                            {% for v in range(result|length) %}
+                                <div style="margin-top: 10px">
+                                    <div class="panel-heading">
+                                        <a data-toggle="collapse"
+                                           href="#collapseExample-{{ v }}" aria-expanded="false"
+                                           aria-controls="collapseExample">
+                                            <h2 class="panel-title">
+                                                {{ result[v].title }}
+                                            </h2>
+                                        </a>
+                                    </div>
+                                    <div class="collapse" id="collapseExample-{{ v }}">
+                                        <div class="well">
+                                            <div class="panel-body">
+                                                {{ result[v].content }}
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                            {% endfor %}
                         </div>
-                    </div>
-                {% endfor %}
-            </div>
         </div>
     </div>
 
@@ -206,8 +221,40 @@
         window.location.href = "/persioncenter"
 
     }
+
     function myblog() {
         window.location.href = "https://blog.csdn.net/tylt6688"
     }
+
 </script>
+
+<script src="../static/js/vue.js"></script>
+
+<script src="../static/js/vue-route.js"></script>
+<script>
+
+    const Foo = {template: '<div>aaaa</div>'}
+    const Bar = {template: 'duanzi.html'}
+    const routes = [{
+        path: '/happybirthday',
+        component: Foo
+    },
+        {
+            path: '/xinqing',
+            component: Bar
+        }
+    ]
+
+    const router = new VueRouter({
+        routes,
+        mode: 'history'
+    })
+
+
+    const app = new Vue({
+        router
+    }).$mount('#app')
+
+</script>
+
 </html>

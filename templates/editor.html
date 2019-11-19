@@ -11,28 +11,22 @@
     <script src="../static/tinymce/js/tinymce/tinymce.min.js"></script>
     <script src="../static/js/tinymce_setup.js"></script>
 
-    <style type="text/css">
-        .btn-submit {
-            margin: 40px 0 0 680px;
-        }
-    </style>
 
 </head>
 <body>
-
-<h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;请在此编写您的文章</h3>
-<a style="margin: 5px 0 10px 1400px" type="button" href="/" class="btn btn-default" title="回到主页">回到主页</a>
-
-
 <div class="container-fluid">
-    <div class="rich_wrap fl">
-        <input class="input_area" id="rich_content" name="content">
-    </div>
-    <div class="btn-submit">
-        <button style="margin-left: 15px" type="button" class="btn btn-default btn-lg" data-toggle="tooltip" data-placement="bottom"
+    <h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;请在此编写您的文章</h3>
+    <form action="/sendArticle" method="post">
+        <a style="margin: 5px 0 10px 140rem" type="button" href="/" class="btn btn-default" title="回到主页">回到主页</a>
+        <button style="margin: -70px 0 5px 130rem" type="submit" class="btn btn-default" data-toggle="tooltip"
+                data-placement="bottom"
                 title="点此即可发布">发布文章
         </button>
-    </div>
+        <div class="rich_wrap fl">
+            <input style="margin-bottom: 2rem" type="text" class="form-control" name="title" placeholder="请输入文章标题" aria-describedby="sizing-addon1">
+            <input class="input_area" id="rich_content" name="content">
+        </div>
+    </form>
 
 </div>
 </body>

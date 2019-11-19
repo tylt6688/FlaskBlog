@@ -12,7 +12,7 @@
 
         #view-paner {
             background: url("../static/images/4.jpg");
-            background-repeat: repeat-x;
+            background-repeat: no-repeat;
         }
 
         #time {
@@ -87,16 +87,15 @@
                 {% endif %}
             {% endfor %}
 
-            {% if datas.p < datas.total %}
+            {% if datas.p < datas.total - 1 %}
                 <li class=''><a href='{{ url_for('article',p=datas.p + 1) }}'>下一页</a></li>
-                <li class=''><a href='{{ url_for('article',p=datas.total) }}'>尾页</a></li>
+                <li class=''><a href='{{ url_for('article',p=datas.total - 1) }}'>尾页</a></li>
             {% endif %}
         </ul>
-        <div class="row">
-            <div class="col-md-1 col-md-offset-10">
-                <p class="bg-primary">共{{ datas.total }}页</p>
+
+            <div style="margin-top: -5.3rem" class="col-md-1 col-md-offset-9">
+                <p>共{{ datas.total - 1 }}页</p>
             </div>
-        </div>
 
     </div>
 

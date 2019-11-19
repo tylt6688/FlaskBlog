@@ -9,33 +9,15 @@
 </head>
 <body>
 <div class="container">
-        <a style="margin: 20px 0 0 70px"  type="button" href="/" class="btn btn-default btn-lg">返回主页</a>
+    <a style="margin: 20px 0 0 1000px" type="button" href="/" class="btn btn-default btn-lg">返回主页</a>
 
-    <div class="row" style="background-color:lavender">
-        <div class="col-md-1"><img src="../static/images/A.png" style="width: 50px;margin-top: 30px">
-        </div>
-        <div class="col-md-4" id="hong"><img src="../static/images/Blog.png" style="width: 50px;margin-top: 0px"></div>
-        <div class="col-md-3"><h1>幽默段子</h1></div>
-        <div class="col-md-4" id="lianxi" style="margin-top: 30px">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-md-1">
-                        <img src="../static/images/phone.png" style="width: 30px">
-                    </div>
-                    <div class="col-md-4"><h4>12345775433</h4></div>
-                    <div class="col-md-1">
-                        <IMG src="../static/images/QQ.png" style="width: 30px">
-                    </div>
-                    <div class="col-md-4"><h4>24567344534</h4></div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <hr>
+<div class="page-header">
+  <h1 style="margin-left: 40rem">搞笑段子集锦&nbsp;&nbsp;<small>给您的生活带来一笑</small></h1>
+</div>
     <div class="row">
-        <div class="col-md-8" style="box-shadow: 3px 3px 6px;  font-size: 10px;background-color: #dfe0e4">
+        <div class="col-md-10">
             <div style="margin-top: 20px">
-                <form action="/duanzi" method="get">
+                <form action="/duanzi" method="get" style="margin-left: 20rem">
                     <ol>
                         {% for v in range(res|length) %}
                             <li><h4>{{ res[v].content }}</h4></li>
@@ -43,53 +25,12 @@
                         {% endfor %}
                     </ol>
                 </form>
-                <nav aria-label="...">
-                    <ul class="pager">
+                    <ul class="pager" style="margin-left: 20rem">
                         <li><a href="#" style="color: black">上一页</a></li>
                         <li><a href="#" style="color: black">下一页</a></li>
                     </ul>
-                </nav>
+
             </div>
-        </div>
-        <div class="col-md-4">
-            <p class="game" style="font-size: 50px;color:black;">游戏中心</p>
-            <ul class="list-group">
-                <li class="list-group-item">
-                    <a href="https://cf.qq.com/"><img style="width: 330px;height: 70px"
-                                                      src="../static/images/cf.png"></a>
-                </li>
-                <li class="list-group-item">
-                    <a href="https://cf.qq.com/"><img style="width: 330px;height: 70px"
-                                                      src="../static/images/lianmeng.png"></a>
-                </li>
-
-                <li class="list-group-item">
-                    <a href="https://cf.qq.com/"><img style="width: 330px;height: 70px"
-                                                      src="../static/images/fly.png"></a>
-                </li>
-                <li class="list-group-item">
-                    <a href="https://cf.qq.com/"><img style="width: 330px;height: 70px"
-                                                      src="../static/images/paopao.png"></a>
-                </li>
-            </ul>
-
-
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <p class="game" style="font-size: 50px;color: black;">独家赞助</p>
-            <a href="https://cf.qq.com/"><img style="width: 170px;height: 70px" src="../static/images/boke.png"></a>
-            <a href="https://cf.qq.com/"><img style="width: 170px;height: 70px" src="../static/images/daba.png"></a>
-            <a href="https://cf.qq.com/"><img style="width: 170px;height: 70px"
-                                              src="../static/images/souhu.png"></a>
-            <a href="https://cf.qq.com/"><img style="width: 170px;height: 70px"
-                                              src="../static/images/tengxun.png"></a>
-            <a href="https://cf.qq.com/"><img style="width: 170px;height: 70px"
-                                              src="../static/images/xinlang.png"></a>
-            <a href="https://cf.qq.com/"><img style="width: 170px;height: 70px"
-                                              src="../static/images/zhongguo.png"></a>
         </div>
     </div>
 </div>
