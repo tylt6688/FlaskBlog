@@ -1,8 +1,9 @@
 import pymysql
-from DBUtils.PooledDB import PooledDB
+from dbutils.pooled_db import PooledDB
+
 from config import Config
 
-
+# from DBUtils.PooledDB import PooledDB
 class SQLUtil(object):
 
     # 连接池对象

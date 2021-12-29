@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
+
+    <title>搜索结果</title>
+    <style type="text/css">
+
+        #view-paner {
+            background: url("../static/images/4.jpg");
+            background-repeat: no-repeat;
+        }
+
+        #time {
+            position: relative;
+            margin: 0 0 0 530px;
+            height: 100px;
+        }
+
+        #time canvas {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="container-fluid">
+        <div class="jumbotron" id="view-paner">
+            <h1>欢迎{{ username }}!</h1>
+            <h3>您的搜索结果如下所示：</h3>
+            <div class="row">
+                <div class="col-md-offset-5">
+                    <a class="btn btn-default btn-lg" href="https://blog.csdn.net/tylt6688" target="_blank"
+                       role="button">看到更多</a>
+
+                    <a class="btn btn-default btn-lg" href="/" target="_blank"
+                       role="button">回到主页</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="time"></div>
+
+    <div class="row">
+        <div class="panel panel-info">
+            {% for v in range(res|length) %}
+                <div>
+                    <div class="panel-heading">
+                        <blockquote data-toggle="collapse"
+                                    href="#collapseExample-{{ v }}" aria-expanded="false"
+                                    aria-controls="collapseExample">
+                            <h2 class="panel-title">
+                                {{ res[v].title }}
+                            </h2>
+                        </blockquote>
+                    </div>
+                    <div class="collapse" id="collapseExample-{{ v }}">
+                        <div class="well">
+                            <div class="panel-body">
+                                {{ res[v].content }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+
+</div>
+<script src="../static/js/time.js"></script>
+
+</body>
+<script src="../static/js/jquery.min.js"></script>
+<script src="../static/js/bootstrap.js"></script>
+</html>

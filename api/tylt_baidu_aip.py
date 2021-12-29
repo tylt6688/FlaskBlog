@@ -1,5 +1,6 @@
 from aip import AipFace
 from aip import AipBodyAnalysis
+
 class tylt_AipFace:
 
     face_constrast_img1 = None

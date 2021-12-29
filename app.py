@@ -1,14 +1,14 @@
 import math
 import os
 import re
-import requests
 import traceback
+import requests
 
 from flask import Flask, render_template, request, redirect, url_for, jsonify, session, make_response
 
 from Utils.Pagetool import get_page
 from Utils.SQLtool import SQLUtil
-from api.tylt_baidu_aip import tylt_AipFace
+# from api.tylt_baidu_aip import tylt_AipFace
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = '7f23059270db4a5686a9fd87662cb510'
